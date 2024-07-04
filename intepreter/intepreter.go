@@ -52,12 +52,14 @@ func (i *Interpreter) Run() {
 	}
 }
 
-func CreateInterpreter(program string, tapeLength int) *Interpreter {
-	return &Interpreter{
-		tape:    createTape(tapeLength),
+func CreateInterpreter(program string) *Interpreter {
+	i := Interpreter{
+		tape:    createTape(32),
 		program: program,
 		pc:      0,
 		s:       Stack{},
 		jt:      make(map[int]int),
 	}
+	i.createJumpTable()
+	return &i
 }

@@ -43,7 +43,7 @@ func (t *tape) Input() {
 }
 
 func (t *tape) Output() {
-	fmt.Println(string(rune(t.data[t.ptr])))
+	fmt.Print(string(rune(t.data[t.ptr])))
 }
 
 // resize resizes the tape if the pointer goes out of the left bound.

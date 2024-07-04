@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import "main/intepreter"
 
 func main() {
-	fmt.Println("hello, world")
+	// Hello World!
+	s := "++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++."
+
+	i := intepreter.CreateInterpreter(s)
+	i.Run()
 }
