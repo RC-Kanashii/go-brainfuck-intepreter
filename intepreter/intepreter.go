@@ -4,9 +4,20 @@ type Interpreter struct {
 	tape    *tape
 	program string
 	pc      int         // program counter
-	ls      Stack       // ls records the position of '['
-	rs      Stack       // rs records the position of ']'
+	s       Stack       // s records the position of '['
 	jt      map[int]int // jt means jump table, which records the position of matching '[' and ']'
+}
+
+func (i *Interpreter) createJumpTable() {
+	for idx, instr := range i.program {
+		if instr == '[' {
+			i.s.Push(idx)
+		} else if instr == ']' {
+			lp := i.s.Pop()
+			i.jt[lp] = idx
+			i.jt[idx] = lp
+		}
+	}
 }
 
 func (i *Interpreter) Run() {
@@ -27,25 +38,14 @@ func (i *Interpreter) Run() {
 		case '<':
 			i.tape.MoveLeft()
 		case '[':
-			if !i.ls.Has(i.pc) {
-				i.ls.Push(i.pc)
-			}
 			if cell == 0 {
 				// pc jumps to the position after the matching ']'
-				i.pc = i.rs.Pop() // pc will be incremented by 1 after the switch statement
-				i.ls.Pop()
-				i.rs.Pop()
+				i.pc = i.jt[i.pc] // pc will be incremented by 1 after the switch statement
 			}
 		case ']':
-			if !i.rs.Has(i.pc) {
-				i.rs.Push(i.pc)
-			}
 			if cell != 0 {
 				// pc jumps to the position of the matching '['
-				i.pc = i.ls.Top() // pc will be incremented by 1 after the switch statement
-			} else {
-				i.ls.Pop()
-				i.rs.Pop()
+				i.pc = i.jt[i.pc] // pc will be incremented by 1 after the switch statement
 			}
 		}
 		i.pc++
@@ -57,8 +57,7 @@ func CreateInterpreter(program string, tapeLength int) *Interpreter {
 		tape:    createTape(tapeLength),
 		program: program,
 		pc:      0,
-		ls:      Stack{},
-		rs:      Stack{},
+		s:       Stack{},
 		jt:      make(map[int]int),
 	}
 }
