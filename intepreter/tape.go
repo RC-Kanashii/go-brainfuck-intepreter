@@ -35,7 +35,8 @@ func (t *tape) MoveLeft() {
 
 func (t *tape) Input() {
 	var i int
-	_, err := fmt.Scanf("Input an integer: %d", &i)
+	fmt.Print("Input an integer: ")
+	_, err := fmt.Scanf("%d", &i)
 	if err != nil {
 		panic(err)
 	}
@@ -43,7 +44,7 @@ func (t *tape) Input() {
 }
 
 func (t *tape) Output() {
-	fmt.Print(string(rune(t.data[t.ptr])))
+	fmt.Printf("%c", t.data[t.ptr])
 }
 
 // resize resizes the tape if the pointer goes out of the left bound.
